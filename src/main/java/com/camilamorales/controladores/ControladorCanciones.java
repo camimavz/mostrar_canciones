@@ -5,11 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.camilamorales.modelos.Cancion;
 import com.camilamorales.servicios.ServicioCanciones;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class ControladorCanciones {
@@ -32,4 +37,29 @@ public class ControladorCanciones {
         modelo.addAttribute("cancion", cancion);
         return "detalleCancion";
     }
+
+    //formulario
+    @GetMapping("/canciones/formulario/agregar")
+    public String formularioAgregarCancion(Model modelo){
+        modelo.addAttribute("cancion", new Cancion());
+        return "agregarCancion";
+    }
+
+    //agregar cancion a base de datos 
+    @PostMapping("/canciones/procesa/agregar")
+    public String procesarAgregarCancion(
+            @Valid @ModelAttribute("cancion") Cancion cancion,
+            BindingResult resultado,
+            Model modelo){
+                
+                //si no pasa validación -> redirigir al mismo formulario
+                if(resultado.hasErrors()){
+                    return "agregarCancion";
+                }
+
+                servicioC.agregarCancion(cancion);
+                
+                //redirigir a lista de canciones 
+                return "redirect:/canciones";
+            }
 }
