@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -91,5 +92,10 @@ public class ControladorCanciones {
                                             return "redirect:/canciones";
                                             }
 
-
+    //elimina canción dado el id recibido y redirige a /canciones
+    @DeleteMapping("/canciones/eliminar/{idCancion}")
+    public String procesarEliminarCancion(@PathVariable("idCancion")Long idCancion){
+        servicioC.eliminarCancion(idCancion);
+        return "redirect:/canciones";
+    }
 }
