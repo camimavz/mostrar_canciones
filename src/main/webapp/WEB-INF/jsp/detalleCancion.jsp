@@ -28,7 +28,7 @@
             <tr>
             <td>${cancion.id}</td>
             <td>${cancion.titulo}</td>
-            <td>${cancion.artista}</td>
+            <td>${cancion.artista.nombre} ${cancion.artista.apellido}</td>
             <td>${cancion.album}</td>
             <td>${cancion.genero}</td>
             <td>${cancion.idioma}</td>

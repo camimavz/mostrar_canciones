@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.camilamorales.modelos.Artista;
 import com.camilamorales.modelos.Cancion;
 import com.camilamorales.servicios.ServicioCanciones;
+import com.camilamorales.servicios.ServicioArtistas;
 
 import jakarta.validation.Valid;
 
@@ -22,6 +24,9 @@ public class ControladorCanciones {
     
     @Autowired
     private ServicioCanciones servicioC;
+
+    @Autowired
+    private ServicioArtistas servicioA;
 
     //para mostrar todas las canciones 
     @GetMapping("/canciones")
@@ -39,30 +44,38 @@ public class ControladorCanciones {
         return "detalleCancion";
     }
 
-    //formulario
+
     @GetMapping("/canciones/formulario/agregar")
-    public String formularioAgregarCancion(Model modelo){
-        modelo.addAttribute("cancion", new Cancion());
+        public String formularioAgregarCancion(Model modelo){
+        Cancion cancion = new Cancion();
+        cancion.setArtista(new Artista()); // ← LÍNEA CLAVE
+
+        modelo.addAttribute("cancion", cancion);
+
+        List<Artista> listaArtistas = servicioA.obtenerTodosLosArtistas();
+        modelo.addAttribute("listaArtistas", listaArtistas);
+
         return "agregarCancion";
-    }
+}
 
     //agregar cancion a base de datos 
     @PostMapping("/canciones/procesa/agregar")
-    public String procesarAgregarCancion(
+        public String procesarAgregarCancion(
             @Valid @ModelAttribute("cancion") Cancion cancion,
             BindingResult resultado,
             Model modelo){
-                
-                //si no pasa validación -> redirigir al mismo formulario
-                if(resultado.hasErrors()){
-                    return "agregarCancion";
-                }
 
-                servicioC.agregarCancion(cancion);
-                
-                //redirigir a lista de canciones 
-                return "redirect:/canciones";
-            }
+    // si hay errores, debemos volver al formulario y reenviar la lista de artistas
+        if(resultado.hasErrors()){
+        
+        List<Artista> listaArtistas = servicioA.obtenerTodosLosArtistas();
+            modelo.addAttribute("listaArtistas", listaArtistas);
+            return "agregarCancion";
+    }
+
+    servicioC.agregarCancion(cancion);
+    return "redirect:/canciones";
+}
 
     //metodo para edicar cancion con formulario
     @GetMapping("/canciones/formulario/editar/{idCancion}")

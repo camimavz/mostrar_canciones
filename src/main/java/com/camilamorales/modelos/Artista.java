@@ -1,26 +1,24 @@
 package com.camilamorales.modelos;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-
 @Entity
-@Table(name = "canciones")
-
-public class Cancion {
+@Table(name="artistas")
+public class Artista {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,32 +26,21 @@ public class Cancion {
 
     @NotBlank
     @Size(min = 5, message="Debe tener al menos 5 caracteres")
-    private String titulo;
-
-    @ManyToOne
-    @JoinColumn(name = "artista_id")
-    @NotNull
-    private Artista artista;
+    private String nombre;
 
     @NotBlank
-    @Size(min = 3, message="Debe tener al menos 3 caracteres")
-    private String album;
+    @Size(min = 5, message="Debe tener al menos 5 caracteres")
+    private String apellido;
 
     @NotBlank
-    @Size(min = 3, message="Debe tener al menos 3 caracteres")
-    private String genero;
-
-    @NotBlank
-    @Size(min = 3, message="Debe tener al menos 3 caracteres")
-    private String idioma;
+    @Size(min = 5, message="Debe tener al menos 5 caracteres")
+    private String biografia;
     
-    @Column(name = "fecha_creacion", updatable = false, nullable = false)
-    //@Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime fechaCreacion;
-
-    @Column(name = "fecha_actualizacion", updatable = true)
     private LocalDateTime fechaActualizacion;
-    
+
+    @OneToMany(mappedBy="artista", cascade = CascadeType.ALL)
+    private List<Cancion> listaCanciones = new ArrayList<>();
 
     @PrePersist
     public void onCreate(){
@@ -65,11 +52,10 @@ public class Cancion {
         this.fechaActualizacion = LocalDateTime.now();
     }
 
-    public Cancion(){
-
+    public Artista(){
     }
 
-    //Getters y Setters 
+    //getters y setters 
 
     public Long getId() {
         return id;
@@ -79,44 +65,28 @@ public class Cancion {
         this.id = id;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public Artista getArtista() {
-        return artista;
+    public String getApellido() {
+        return apellido;
     }
 
-    public void setArtista(Artista artista) {
-        this.artista = artista;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
-    public String getAlbum() {
-        return album;
+    public String getBiografia() {
+        return biografia;
     }
 
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
-
-    public String getIdioma() {
-        return idioma;
-    }
-
-    public void setIdioma(String idioma) {
-        this.idioma = idioma;
+    public void setBiografia(String biografia) {
+        this.biografia = biografia;
     }
 
     public LocalDateTime getFechaCreacion() {
@@ -135,6 +105,13 @@ public class Cancion {
         this.fechaActualizacion = fechaActualizacion;
     }
 
+    public List<Cancion> getListaCanciones() {
+        return listaCanciones;
+    }
 
+    public void setListaCanciones(List<Cancion> listaCanciones) {
+        this.listaCanciones = listaCanciones;
+    }
+
+    
 }
-
