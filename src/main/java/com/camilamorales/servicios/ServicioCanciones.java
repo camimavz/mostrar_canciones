@@ -14,10 +14,6 @@ public class ServicioCanciones {
     @Autowired
     private RepositorioCanciones repositorioC;
 
-    //public ServicioCanciones(RepositorioCanciones repositorioC){
-    //    this.repositorioC = repositorioC;
-    //}
-
     public List<Cancion> obtenerTodasLasCanciones(){
         return this.repositorioC.findAll();
     }
@@ -31,4 +27,8 @@ public class ServicioCanciones {
         return repositorioC.save(cancion);
     }
 
+    //metodo para actualizar una cancion
+    public Cancion actualizaCancion(Cancion cancion){
+        return repositorioC.save(cancion);
+    }
 }

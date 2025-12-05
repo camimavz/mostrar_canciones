@@ -39,5 +39,6 @@
     </table>
     <br>
     <a href="/canciones"> Volver a lista de canciones </a>
+    <a href="/canciones/formulario/editar/${idCancion}">Editar Canción </a>
 </body>
 </html>
